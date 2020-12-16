@@ -86,381 +86,381 @@ const waitAndCheckTabindex = async function (t, selector) {
 
 // Attributes
 
-ariaTest(
-  'Toolbar element has role="toolbar"',
-  exampleFile,
-  'toolbar-role',
-  async (t) => {
-    await assertAriaRoles(t, 'ex1', 'toolbar', '1', 'div');
-  }
-);
+// ariaTest(
+//   'Toolbar element has role="toolbar"',
+//   exampleFile,
+//   'toolbar-role',
+//   async (t) => {
+//     await assertAriaRoles(t, 'ex1', 'toolbar', '1', 'div');
+//   }
+// );
 
-ariaTest(
-  'Toolbar element has "aria-label"',
-  exampleFile,
-  'toolbar-aria-label',
-  async (t) => {
-    await assertAriaLabelExists(t, ex.toolbarSelector);
-  }
-);
+// ariaTest(
+//   'Toolbar element has "aria-label"',
+//   exampleFile,
+//   'toolbar-aria-label',
+//   async (t) => {
+//     await assertAriaLabelExists(t, ex.toolbarSelector);
+//   }
+// );
 
-ariaTest(
-  'Toolbar element has "aria-controls"',
-  exampleFile,
-  'toolbar-aria-controls',
-  async (t) => {
-    await assertAriaControls(t, ex.toolbarSelector);
-  }
-);
+// ariaTest(
+//   'Toolbar element has "aria-controls"',
+//   exampleFile,
+//   'toolbar-aria-controls',
+//   async (t) => {
+//     await assertAriaControls(t, ex.toolbarSelector);
+//   }
+// );
 
-ariaTest(
-  'Toolbar items support roving tabindex on toolbar items (Part 1)',
-  exampleFile,
-  'toolbar-item-tabindex',
-  async (t) => {
-    // Test all the toolbar items with roving tab index
-    await assertRovingTabindex(t, ex.itemSelector, Key.ARROW_RIGHT);
-  }
-);
+// ariaTest(
+//   'Toolbar items support roving tabindex on toolbar items (Part 1)',
+//   exampleFile,
+//   'toolbar-item-tabindex',
+//   async (t) => {
+//     // Test all the toolbar items with roving tab index
+//     await assertRovingTabindex(t, ex.itemSelector, Key.ARROW_RIGHT);
+//   }
+// );
 
-ariaTest(
-  'Toolbar buttons have aria-pressed',
-  exampleFile,
-  'toolbar-button-aria-pressed',
-  async (t) => {
-    await assertAttributeValues(
-      t,
-      ex.styleButtonsSelector,
-      'aria-pressed',
-      'false'
-    );
+// ariaTest(
+//   'Toolbar buttons have aria-pressed',
+//   exampleFile,
+//   'toolbar-button-aria-pressed',
+//   async (t) => {
+//     await assertAttributeValues(
+//       t,
+//       ex.styleButtonsSelector,
+//       'aria-pressed',
+//       'false'
+//     );
 
-    let buttons = await t.context.queryElements(t, ex.styleButtonsSelector);
-    for (let button of buttons) {
-      await button.click();
-    }
+//     let buttons = await t.context.queryElements(t, ex.styleButtonsSelector);
+//     for (let button of buttons) {
+//       await button.click();
+//     }
 
-    await assertAttributeValues(
-      t,
-      ex.styleButtonsSelector,
-      'aria-pressed',
-      'true'
-    );
-  }
-);
+//     await assertAttributeValues(
+//       t,
+//       ex.styleButtonsSelector,
+//       'aria-pressed',
+//       'true'
+//     );
+//   }
+// );
 
-ariaTest(
-  'All toolbar images have aria-hidden',
-  exampleFile,
-  'toolbar-aria-hidden',
-  async (t) => {
-    await assertAttributeValues(
-      t,
-      ex.buttonIconSelector,
-      'aria-hidden',
-      'true'
-    );
-  }
-);
+// ariaTest(
+//   'All toolbar images have aria-hidden',
+//   exampleFile,
+//   'toolbar-aria-hidden',
+//   async (t) => {
+//     await assertAttributeValues(
+//       t,
+//       ex.buttonIconSelector,
+//       'aria-hidden',
+//       'true'
+//     );
+//   }
+// );
 
-ariaTest(
-  'Div has "radiogroup" role',
-  exampleFile,
-  'toolbar-radiogroup-role',
-  async (t) => {
-    await assertAriaRoles(t, 'ex1', 'radiogroup', '1', 'div');
-  }
-);
+// ariaTest(
+//   'Div has "radiogroup" role',
+//   exampleFile,
+//   'toolbar-radiogroup-role',
+//   async (t) => {
+//     await assertAriaRoles(t, 'ex1', 'radiogroup', '1', 'div');
+//   }
+// );
 
-ariaTest(
-  'Radiogroup has aria-label',
-  exampleFile,
-  'toolbar-radiogroup-aria-label',
-  async (t) => {
-    await assertAriaLabelExists(t, ex.alignmentGroupSelector);
-  }
-);
+// ariaTest(
+//   'Radiogroup has aria-label',
+//   exampleFile,
+//   'toolbar-radiogroup-aria-label',
+//   async (t) => {
+//     await assertAriaLabelExists(t, ex.alignmentGroupSelector);
+//   }
+// );
 
-ariaTest(
-  'Radio buttons have radio role',
-  exampleFile,
-  'toolbar-radio-role',
-  async (t) => {
-    await assertAriaRoles(t, 'ex1', 'radio', '3', 'button');
-  }
-);
+// ariaTest(
+//   'Radio buttons have radio role',
+//   exampleFile,
+//   'toolbar-radio-role',
+//   async (t) => {
+//     await assertAriaRoles(t, 'ex1', 'radio', '3', 'button');
+//   }
+// );
 
-ariaTest(
-  'Radio buttons had aria-checked',
-  exampleFile,
-  'toolbar-radio-aria-checked',
-  async (t) => {
-    let buttons = await t.context.queryElements(t, ex.alignmentButtonsSelector);
+// ariaTest(
+//   'Radio buttons had aria-checked',
+//   exampleFile,
+//   'toolbar-radio-aria-checked',
+//   async (t) => {
+//     let buttons = await t.context.queryElements(t, ex.alignmentButtonsSelector);
 
-    for (let i = 0; i < buttons.length; i++) {
-      await buttons[i].click();
-      for (let j = 0; j < buttons.length; j++) {
-        let value = j === i ? 'true' : 'false';
-        t.is(
-          await buttons[j].getAttribute('aria-checked'),
-          value,
-          'Only alignment button ' +
-            i +
-            ' should have aria-checked set after clicking alignment button ' +
-            i
-        );
-      }
-    }
-  }
-);
+//     for (let i = 0; i < buttons.length; i++) {
+//       await buttons[i].click();
+//       for (let j = 0; j < buttons.length; j++) {
+//         let value = j === i ? 'true' : 'false';
+//         t.is(
+//           await buttons[j].getAttribute('aria-checked'),
+//           value,
+//           'Only alignment button ' +
+//             i +
+//             ' should have aria-checked set after clicking alignment button ' +
+//             i
+//         );
+//       }
+//     }
+//   }
+// );
 
-ariaTest(
-  'Text edit buttons have aria-disabled set to true by default',
-  exampleFile,
-  'toolbar-button-aria-disabled',
-  async (t) => {
-    await assertAttributeValues(
-      t,
-      ex.textEditButtonsSelector,
-      'aria-disabled',
-      'true'
-    );
-  }
-);
+// ariaTest(
+//   'Text edit buttons have aria-disabled set to true by default',
+//   exampleFile,
+//   'toolbar-button-aria-disabled',
+//   async (t) => {
+//     await assertAttributeValues(
+//       t,
+//       ex.textEditButtonsSelector,
+//       'aria-disabled',
+//       'true'
+//     );
+//   }
+// );
 
-ariaTest(
-  'Font family button has aria-label',
-  exampleFile,
-  'toolbar-menubutton-aria-label',
-  async (t) => {
-    await assertAriaLabelExists(t, ex.fontFamilyButtonSelector);
-  }
-);
+// ariaTest(
+//   'Font family button has aria-label',
+//   exampleFile,
+//   'toolbar-menubutton-aria-label',
+//   async (t) => {
+//     await assertAriaLabelExists(t, ex.fontFamilyButtonSelector);
+//   }
+// );
 
-ariaTest(
-  'Font family button has aria-haspopup',
-  exampleFile,
-  'toolbar-menubutton-aria-haspopup',
-  async (t) => {
-    await assertAttributeValues(
-      t,
-      ex.fontFamilyButtonSelector,
-      'aria-haspopup',
-      'true'
-    );
-  }
-);
+// ariaTest(
+//   'Font family button has aria-haspopup',
+//   exampleFile,
+//   'toolbar-menubutton-aria-haspopup',
+//   async (t) => {
+//     await assertAttributeValues(
+//       t,
+//       ex.fontFamilyButtonSelector,
+//       'aria-haspopup',
+//       'true'
+//     );
+//   }
+// );
 
-ariaTest(
-  'Font family button has aria-controls',
-  exampleFile,
-  'toolbar-menubutton-aria-controls',
-  async (t) => {
-    await assertAriaControls(t, ex.fontFamilyButtonSelector);
-  }
-);
+// ariaTest(
+//   'Font family button has aria-controls',
+//   exampleFile,
+//   'toolbar-menubutton-aria-controls',
+//   async (t) => {
+//     await assertAriaControls(t, ex.fontFamilyButtonSelector);
+//   }
+// );
 
-ariaTest(
-  'Font family button has aria-expanded',
-  exampleFile,
-  'toolbar-menubutton-aria-expanded',
-  async (t) => {
-    await assertAttributeDNE(t, ex.fontFamilyButtonSelector, 'aria-expanded');
+// ariaTest(
+//   'Font family button has aria-expanded',
+//   exampleFile,
+//   'toolbar-menubutton-aria-expanded',
+//   async (t) => {
+//     await assertAttributeDNE(t, ex.fontFamilyButtonSelector, 'aria-expanded');
 
-    await (
-      await t.context.session.findElement(By.css(ex.fontFamilyButtonSelector))
-    ).click();
+//     await (
+//       await t.context.session.findElement(By.css(ex.fontFamilyButtonSelector))
+//     ).click();
 
-    await assertAttributeValues(
-      t,
-      ex.fontFamilyButtonSelector,
-      'aria-expanded',
-      'true'
-    );
-  }
-);
+//     await assertAttributeValues(
+//       t,
+//       ex.fontFamilyButtonSelector,
+//       'aria-expanded',
+//       'true'
+//     );
+//   }
+// );
 
-ariaTest(
-  'Font family menu has menu role',
-  exampleFile,
-  'toolbar-menu-role',
-  async (t) => {
-    await assertAriaRoles(t, 'ex1', 'menu', '1', 'ul');
-  }
-);
+// ariaTest(
+//   'Font family menu has menu role',
+//   exampleFile,
+//   'toolbar-menu-role',
+//   async (t) => {
+//     await assertAriaRoles(t, 'ex1', 'menu', '1', 'ul');
+//   }
+// );
 
-ariaTest(
-  'Font family menu has aria-label',
-  exampleFile,
-  'toolbar-menu-aria-label',
-  async (t) => {
-    await assertAriaLabelExists(t, ex.menuSelector);
-  }
-);
+// ariaTest(
+//   'Font family menu has aria-label',
+//   exampleFile,
+//   'toolbar-menu-aria-label',
+//   async (t) => {
+//     await assertAriaLabelExists(t, ex.menuSelector);
+//   }
+// );
 
-ariaTest(
-  'Menuitemradio role',
-  exampleFile,
-  'toolbar-menuitemradio-role',
-  async (t) => {
-    await assertAriaRoles(t, 'ex1', 'menuitemradio', '5', 'li');
-  }
-);
+// ariaTest(
+//   'Menuitemradio role',
+//   exampleFile,
+//   'toolbar-menuitemradio-role',
+//   async (t) => {
+//     await assertAriaRoles(t, 'ex1', 'menuitemradio', '5', 'li');
+//   }
+// );
 
-ariaTest(
-  'menuitemradio elements have aria-checked set',
-  exampleFile,
-  'toolbar-menuitemradio-aria-checked',
-  async (t) => {
-    let menuButton = await t.context.session.findElement(
-      By.css(ex.fontFamilyButtonSelector)
-    );
-    let menuItems = await t.context.queryElements(
-      t,
-      ex.fontFamilyMenuitemSelector
-    );
+// ariaTest(
+//   'menuitemradio elements have aria-checked set',
+//   exampleFile,
+//   'toolbar-menuitemradio-aria-checked',
+//   async (t) => {
+//     let menuButton = await t.context.session.findElement(
+//       By.css(ex.fontFamilyButtonSelector)
+//     );
+//     let menuItems = await t.context.queryElements(
+//       t,
+//       ex.fontFamilyMenuitemSelector
+//     );
 
-    for (let i = 0; i < menuItems.length; i++) {
-      await menuButton.click();
-      await menuItems[i].click();
-      await menuButton.click();
-      for (let j = 0; j < menuItems.length; j++) {
-        let value = j === i ? 'true' : 'false';
-        t.is(
-          await menuItems[j].getAttribute('aria-checked'),
-          value,
-          'Only alignment button ' +
-            i +
-            ' should have aria-checked set after clicking alignment button ' +
-            i
-        );
-      }
-    }
-  }
-);
+//     for (let i = 0; i < menuItems.length; i++) {
+//       await menuButton.click();
+//       await menuItems[i].click();
+//       await menuButton.click();
+//       for (let j = 0; j < menuItems.length; j++) {
+//         let value = j === i ? 'true' : 'false';
+//         t.is(
+//           await menuItems[j].getAttribute('aria-checked'),
+//           value,
+//           'Only alignment button ' +
+//             i +
+//             ' should have aria-checked set after clicking alignment button ' +
+//             i
+//         );
+//       }
+//     }
+//   }
+// );
 
-ariaTest(
-  'menuitemradio elements have tabindex set to -1',
-  exampleFile,
-  'toolbar-menuitemradio-tabindex',
-  async (t) => {
-    await (
-      await t.context.session.findElement(By.css(ex.fontFamilyButtonSelector))
-    ).click();
+// ariaTest(
+//   'menuitemradio elements have tabindex set to -1',
+//   exampleFile,
+//   'toolbar-menuitemradio-tabindex',
+//   async (t) => {
+//     await (
+//       await t.context.session.findElement(By.css(ex.fontFamilyButtonSelector))
+//     ).click();
 
-    await assertAttributeValues(
-      t,
-      ex.fontFamilyMenuitemSelector,
-      'tabindex',
-      '-1'
-    );
-  }
-);
+//     await assertAttributeValues(
+//       t,
+//       ex.fontFamilyMenuitemSelector,
+//       'tabindex',
+//       '-1'
+//     );
+//   }
+// );
 
-ariaTest(
-  'Spinbutton has aria-label',
-  exampleFile,
-  'toolbar-spinbutton-aria-label',
-  async (t) => {
-    await assertAriaLabelExists(t, ex.spinSelector);
-  }
-);
+// ariaTest(
+//   'Spinbutton has aria-label',
+//   exampleFile,
+//   'toolbar-spinbutton-aria-label',
+//   async (t) => {
+//     await assertAriaLabelExists(t, ex.spinSelector);
+//   }
+// );
 
-ariaTest(
-  'Spinbutton has aria-valuenow',
-  exampleFile,
-  'toolbar-spinbutton-aria-valuenow',
-  async (t) => {
-    await assertAttributeValues(t, ex.spinSelector, 'aria-valuenow', '14');
+// ariaTest(
+//   'Spinbutton has aria-valuenow',
+//   exampleFile,
+//   'toolbar-spinbutton-aria-valuenow',
+//   async (t) => {
+//     await assertAttributeValues(t, ex.spinSelector, 'aria-valuenow', '14');
 
-    await (
-      await t.context.session.findElement(By.css(ex.spinUpSelector))
-    ).click();
-    await assertAttributeValues(t, ex.spinSelector, 'aria-valuenow', '15');
+//     await (
+//       await t.context.session.findElement(By.css(ex.spinUpSelector))
+//     ).click();
+//     await assertAttributeValues(t, ex.spinSelector, 'aria-valuenow', '15');
 
-    await (
-      await t.context.session.findElement(By.css(ex.spinDownSelector))
-    ).click();
-    await assertAttributeValues(t, ex.spinSelector, 'aria-valuenow', '14');
-  }
-);
+//     await (
+//       await t.context.session.findElement(By.css(ex.spinDownSelector))
+//     ).click();
+//     await assertAttributeValues(t, ex.spinSelector, 'aria-valuenow', '14');
+//   }
+// );
 
-ariaTest(
-  'Spin button had valuetext',
-  exampleFile,
-  'toolbar-spinbutton-aria-valuetext',
-  async (t) => {
-    await assertAttributeValues(
-      t,
-      ex.spinSelector,
-      'aria-valuetext',
-      '14 Point'
-    );
+// ariaTest(
+//   'Spin button had valuetext',
+//   exampleFile,
+//   'toolbar-spinbutton-aria-valuetext',
+//   async (t) => {
+//     await assertAttributeValues(
+//       t,
+//       ex.spinSelector,
+//       'aria-valuetext',
+//       '14 Point'
+//     );
 
-    t.is(
-      await (
-        await t.context.session.findElement(By.css(ex.spinSelector))
-      ).getAttribute('aria-valuetext'),
-      await (
-        await t.context.session.findElement(By.css(ex.spinTextSelector))
-      ).getText(),
-      'The spin buttons aria-valuetext attribute should match the text on the spin button'
-    );
+//     t.is(
+//       await (
+//         await t.context.session.findElement(By.css(ex.spinSelector))
+//       ).getAttribute('aria-valuetext'),
+//       await (
+//         await t.context.session.findElement(By.css(ex.spinTextSelector))
+//       ).getText(),
+//       'The spin buttons aria-valuetext attribute should match the text on the spin button'
+//     );
 
-    await (
-      await t.context.session.findElement(By.css(ex.spinUpSelector))
-    ).click();
-    await assertAttributeValues(
-      t,
-      ex.spinSelector,
-      'aria-valuetext',
-      '15 Point'
-    );
+//     await (
+//       await t.context.session.findElement(By.css(ex.spinUpSelector))
+//     ).click();
+//     await assertAttributeValues(
+//       t,
+//       ex.spinSelector,
+//       'aria-valuetext',
+//       '15 Point'
+//     );
 
-    t.is(
-      await (
-        await t.context.session.findElement(By.css(ex.spinSelector))
-      ).getAttribute('aria-valuetext'),
-      await (
-        await t.context.session.findElement(By.css(ex.spinTextSelector))
-      ).getText(),
-      'The spin buttons aria-valuetext attribute should match the text on the spin button'
-    );
+//     t.is(
+//       await (
+//         await t.context.session.findElement(By.css(ex.spinSelector))
+//       ).getAttribute('aria-valuetext'),
+//       await (
+//         await t.context.session.findElement(By.css(ex.spinTextSelector))
+//       ).getText(),
+//       'The spin buttons aria-valuetext attribute should match the text on the spin button'
+//     );
 
-    await (
-      await t.context.session.findElement(By.css(ex.spinDownSelector))
-    ).click();
-    await assertAttributeValues(
-      t,
-      ex.spinSelector,
-      'aria-valuetext',
-      '14 Point'
-    );
+//     await (
+//       await t.context.session.findElement(By.css(ex.spinDownSelector))
+//     ).click();
+//     await assertAttributeValues(
+//       t,
+//       ex.spinSelector,
+//       'aria-valuetext',
+//       '14 Point'
+//     );
 
-    t.is(
-      await (
-        await t.context.session.findElement(By.css(ex.spinSelector))
-      ).getAttribute('aria-valuetext'),
-      await (
-        await t.context.session.findElement(By.css(ex.spinTextSelector))
-      ).getText(),
-      'The spin buttons aria-valuetext attribute should match the text on the spin button'
-    );
-  }
-);
+//     t.is(
+//       await (
+//         await t.context.session.findElement(By.css(ex.spinSelector))
+//       ).getAttribute('aria-valuetext'),
+//       await (
+//         await t.context.session.findElement(By.css(ex.spinTextSelector))
+//       ).getText(),
+//       'The spin buttons aria-valuetext attribute should match the text on the spin button'
+//     );
+//   }
+// );
 
-ariaTest(
-  'Spin button has valuemin',
-  exampleFile,
-  'toolbar-spinbutton-aria-valuemin',
-  async (t) => {
-    await assertAttributeValues(t, ex.spinSelector, 'aria-valuemin', '8');
-  }
-);
+// ariaTest(
+//   'Spin button has valuemin',
+//   exampleFile,
+//   'toolbar-spinbutton-aria-valuemin',
+//   async (t) => {
+//     await assertAttributeValues(t, ex.spinSelector, 'aria-valuemin', '8');
+//   }
+// );
 
-ariaTest('', exampleFile, 'toolbar-spinbutton-aria-valuemax', async (t) => {
-  await assertAttributeValues(t, ex.spinSelector, 'aria-valuemax', '40');
-});
+// ariaTest('', exampleFile, 'toolbar-spinbutton-aria-valuemax', async (t) => {
+//   await assertAttributeValues(t, ex.spinSelector, 'aria-valuemax', '40');
+// });
 
 // Keys
 
