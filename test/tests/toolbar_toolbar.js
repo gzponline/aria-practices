@@ -462,10 +462,9 @@ ariaTest('', exampleFile, 'toolbar-spinbutton-aria-valuemax', async (t) => {
   await assertAttributeValues(t, ex.spinSelector, 'aria-valuemax', '40');
 });
 
-/*
-
 // Keys
 
+/*
 ariaTest('key TAB moves focus', exampleFile, 'toolbar-tab', async (t) => {
   let numTools = ex.allToolSelectors.length;
 
@@ -628,3 +627,21 @@ ariaTest('key END moves focus', exampleFile, 'toolbar-end', async (t) => {
 });
 
 */
+
+//ariaTest('', exampleFile, 'toolbar-toogle-esc', async (t) => {});
+//ariaTest('', exampleFile, 'toolbar-toggle-enter-or-space', async (t) => {});
+//ariaTest('', exampleFile, 'toolbar-radio-enter-or-space', async (t) => {});
+//ariaTest('', exampleFile, 'toolbar-radio-down-arrow', async (t) => {});
+//ariaTest('', exampleFile, 'toolbar-radio-up-arrow', async (t) => {});
+//ariaTest('', exampleFile, 'toolbar-button-enter-or-space', async (t) => {});
+//ariaTest('', exampleFile, 'toolbar-menubutton-enter-or-space-or-down-or-up', async (t) => {});
+//ariaTest('', exampleFile, 'toolbar-menu-enter-or-space', async (t) => {});
+//ariaTest('', exampleFile, 'toolbar-menu-down-arrow', async (t) => {});
+//ariaTest('', exampleFile, 'toolbar-menu-up-arrow', async (t) => {});
+//ariaTest('', exampleFile, 'toolbar-menu-escape', async (t) => {});
+//ariaTest('', exampleFile, 'toolbar-spinbutton-down-arrow', async (t) => {});
+//ariaTest('', exampleFile, 'toolbar-spinbutton-up-arrow', async (t) => {});
+//ariaTest('', exampleFile, 'toolbar-spinbutton-page-down', async (t) => {});
+//ariaTest('', exampleFile, 'toolbar-spinbutton-page-up', async (t) => {});
+//ariaTest('', exampleFile, 'toolbar-checkbox-space', async (t) => {});
+//ariaTest('', exampleFile, 'toolbar-link-enter-or-space', async (t) => {});
