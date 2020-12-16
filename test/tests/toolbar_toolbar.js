@@ -6,6 +6,7 @@ const assertAriaRoles = require('../util/assertAriaRoles');
 const assertAttributeDNE = require('../util/assertAttributeDNE');
 const assertAttributeValues = require('../util/assertAttributeValues');
 const assertRovingTabindex = require('../util/assertRovingTabindex');
+const assertTabOrder = require('../util/assertTabOrder');
 
 const exampleFile = 'toolbar/toolbar.html';
 
@@ -28,9 +29,8 @@ const ex = {
   spinTextSelector: '#ex1 [role="spinbutton"] .value',
   checkboxSelector: '#ex1 .item',
   linkSelector: '#ex1 [href]',
-  allToolSelectors: ['#ex1 .item'],
-  tabbableItemBeforeToolbarSelector: '[href="../../#toolbar"]',
-  tabbableItemAfterToolbarSelector: '[href="../../#kbd_roving_tabindex"]',
+  tabbableItemBeforeToolbarSelector: '[href="../../#kbd_roving_tabindex"]',
+  textArea: '#ex1 textarea',
 };
 
 const clickAndWait = async function (t, selector) {
@@ -51,6 +51,7 @@ const clickAndWait = async function (t, selector) {
     });
 };
 
+// TODO: add "index" option
 const waitAndCheckFocus = async function (t, selector) {
   return t.context.session
     .wait(
@@ -464,169 +465,164 @@ const waitAndCheckTabindex = async function (t, selector) {
 
 // Keys
 
-/*
 ariaTest('key TAB moves focus', exampleFile, 'toolbar-tab', async (t) => {
-  let numTools = ex.allToolSelectors.length;
+  await assertTabOrder(t, [
+    ex.tabbableItemBeforeToolbarSelector,
+    ex.itemSelector,
+    ex.textArea,
+  ]);
 
-  for (let index = 0; index < numTools; index++) {
-    let toolSelector = ex.allToolSelectors[index];
+  await (
+    await t.context.session.findElement(By.css(ex.alignmentButtonsSelector))
+  ).click();
 
-    // Click on element to set focus
-    await clickAndWait(t, toolSelector);
-
-    // Send tab key to element
-    await t.context.session.findElement(By.css(toolSelector))
-      .sendKeys(Key.TAB);
-
-    t.true(
-      await waitAndCheckFocus(t, ex.tabbableItemAfterToolbarSelector, index),
-      'Sending TAB to: ' + toolSelector + ' should move focus off toolbar'
-    );
-  }
+  await assertTabOrder(t, [
+    ex.tabbableItemBeforeToolbarSelector,
+    ex.alignmentButtonsSelector,
+    ex.textArea,
+  ]);
 });
 
-ariaTest('key LEFT ARROW moves focus', exampleFile, 'toolbar-left-arrow', async (t) => {
-  // Put focus on the first item in the list
-  await clickAndWait(t, ex.allToolSelectors[0]);
+ariaTest(
+  'key LEFT ARROW moves focus',
+  exampleFile,
+  'toolbar-left-arrow',
+  async (t) => {
+    // Put focus on the first item in the list
+    await clickAndWait(t, ex.itemSelector);
 
-  let numTools = ex.allToolSelectors.length;
-  let toolSelector = ex.allToolSelectors[0];
-  let nextToolSelector = ex.allToolSelectors[numTools - 1];
+    let items = t.context.session.queryElements(t, ex.itemSelector);
 
-  // Send ARROW LEFT key to the first item
-  await t.context.session.findElement(By.css(toolSelector))
-    .sendKeys(Key.ARROW_LEFT);
+    // Send ARROW LEFT key to the first item
+    await items[0].sendKeys(Key.ARROW_LEFT);
 
-  // Focus should now be on last item
-  t.true(
-    await waitAndCheckFocus(t, nextToolSelector),
-    'Sending ARROW_RIGHT to tool "' + toolSelector + '" should move focus to "' +
-      nextToolSelector + '"'
-  );
-
-  t.true(
-    await waitAndCheckTabindex(t, nextToolSelector),
-    'Sending ARROW_RIGHT to tool "' + toolSelector + '" should set tabindex on "' +
-      nextToolSelector + '"'
-  );
-
-
-  // Confirm right arrow moves focus to the previous item
-  for (let index = numTools - 1; index > 0; index--) {
-    let toolSelector = ex.allToolSelectors[index];
-    let nextToolSelector = ex.allToolSelectors[index + 1];
-
-    // Send ARROW LEFT key
-    await t.context.session.findElement(By.css(toolSelector))
-      .sendKeys(Key.ARROW_LEFT);
-
+    // Focus should now be on last item
     t.true(
-      await waitAndCheckFocus(t, nextToolSelector),
-      'Sending ARROW_RIGHT to tool "' + toolSelector + '" should move focus to "' +
-        nextToolSelector + '"'
+      await waitAndCheckFocus(t, ex.itemSelector, items.length - 1),
+      `Sending ARROW_RIGHT to item at index 0 should move focus to item at index ${
+        items.length - 1
+      }`
     );
 
-    t.true(
-      await waitAndCheckTabindex(t, nextToolSelector),
-      'Sending ARROW_RIGHT to tool "' + toolSelector + '" should set tabindex on "' +
-        nextToolSelector + '"'
+    t.is(
+      await items[items.length - 1].getAttribute('tabindex'),
+      '0',
+      `Sending ARROW_RIGHT to item at index 0 should set tabindex=0 for item at index ${
+        items.length - 1
+      }`
     );
+
+    for (let i = items.length - 1; i > 0; i--) {
+      await items[i].sendKeys(Key.ARROW_LEFT);
+
+      t.true(
+        await waitAndCheckFocus(t, ex.itemSelector, i - 1),
+        `Sending ARROW_RIGHT to item at index ${i} should move focus to item at index ${
+          i - 1
+        }`
+      );
+
+      t.is(
+        await items[items.length - 1].getAttribute('tabindex'),
+        '0',
+        `Sending ARROW_RIGHT to item at index ${i} should set tabindex=0 for item at index ${
+          i - 1
+        }`
+      );
+    }
   }
+);
 
-});
+// ariaTest('key RIGHT ARROW moves focus', exampleFile, 'toolbar-right-arrow', async (t) => {
+//   // Put focus on the first item in the list
+//   await clickAndWait(t, ex.allToolSelectors[0]);
 
-ariaTest('key RIGHT ARROW moves focus', exampleFile, 'toolbar-right-arrow', async (t) => {
-  // Put focus on the first item in the list
-  await clickAndWait(t, ex.allToolSelectors[0]);
+//   let numTools = ex.allToolSelectors.length;
 
-  let numTools = ex.allToolSelectors.length;
+//   // Confirm right arrow moves focus to the next item
+//   for (let index = 0; index < numTools - 1; index++) {
+//     let toolSelector = ex.allToolSelectors[index];
+//     let nextToolSelector = ex.allToolSelectors[index + 1];
 
-  // Confirm right arrow moves focus to the next item
-  for (let index = 0; index < numTools - 1; index++) {
-    let toolSelector = ex.allToolSelectors[index];
-    let nextToolSelector = ex.allToolSelectors[index + 1];
+//     // Send ARROW RIGHT key
+//     await t.context.session.findElement(By.css(toolSelector))
+//       .sendKeys(Key.ARROW_RIGHT);
 
-    // Send ARROW RIGHT key
-    await t.context.session.findElement(By.css(toolSelector))
-      .sendKeys(Key.ARROW_RIGHT);
+//     t.true(
+//       await waitAndCheckFocus(t, nextToolSelector),
+//       'Sending ARROW_RIGHT to tool "' + toolSelector + '" should move focus to "' +
+//         nextToolSelector + '"'
+//     );
 
-    t.true(
-      await waitAndCheckFocus(t, nextToolSelector),
-      'Sending ARROW_RIGHT to tool "' + toolSelector + '" should move focus to "' +
-        nextToolSelector + '"'
-    );
+//     t.true(
+//       await waitAndCheckTabindex(t, nextToolSelector),
+//       'Sending ARROW_RIGHT to tool "' + toolSelector + '" should set tabindex on "' +
+//         nextToolSelector + '"'
+//     );
+//   }
 
-    t.true(
-      await waitAndCheckTabindex(t, nextToolSelector),
-      'Sending ARROW_RIGHT to tool "' + toolSelector + '" should set tabindex on "' +
-        nextToolSelector + '"'
-    );
-  }
+//   let toolSelector = ex.allToolSelectors[numTools - 1];
+//   let nextToolSelector = ex.allToolSelectors[0];
 
-  let toolSelector = ex.allToolSelectors[numTools - 1];
-  let nextToolSelector = ex.allToolSelectors[0];
+//   // Send ARROW RIGHT key to the last item
+//   await t.context.session.findElement(By.css(toolSelector))
+//     .sendKeys(Key.ARROW_RIGHT);
 
-  // Send ARROW RIGHT key to the last item
-  await t.context.session.findElement(By.css(toolSelector))
-    .sendKeys(Key.ARROW_RIGHT);
+//   // Focus should now be on first item
+//   t.true(
+//     await waitAndCheckFocus(t, nextToolSelector),
+//     'Sending ARROW_RIGHT to tool "' + toolSelector + '" should move focus to "' +
+//       nextToolSelector + '"'
+//   );
 
-  // Focus should now be on first item
-  t.true(
-    await waitAndCheckFocus(t, nextToolSelector),
-    'Sending ARROW_RIGHT to tool "' + toolSelector + '" should move focus to "' +
-      nextToolSelector + '"'
-  );
+//   t.true(
+//     await waitAndCheckTabindex(t, nextToolSelector),
+//     'Sending ARROW_RIGHT to tool "' + toolSelector + '" should set tabindex on "' +
+//       nextToolSelector + '"'
+//   );
+// });
 
-  t.true(
-    await waitAndCheckTabindex(t, nextToolSelector),
-    'Sending ARROW_RIGHT to tool "' + toolSelector + '" should set tabindex on "' +
-      nextToolSelector + '"'
-  );
-});
+// ariaTest('key HOME moves focus', exampleFile, 'toolbar-home', async (t) => {
+//   let numTools = ex.allToolSelectors.length;
 
-ariaTest('key HOME moves focus', exampleFile, 'toolbar-home', async (t) => {
-  let numTools = ex.allToolSelectors.length;
+//   // Confirm right moves HOME focus to first item
+//   for (let index = 0; index < numTools - 1; index++) {
+//     let toolSelector = ex.allToolSelectors[index];
 
-  // Confirm right moves HOME focus to first item
-  for (let index = 0; index < numTools - 1; index++) {
-    let toolSelector = ex.allToolSelectors[index];
+//     // Click on element to focus
+//     await clickAndWait(t, toolSelector);
 
-    // Click on element to focus
-    await clickAndWait(t, toolSelector);
+//     // Send HOME key to the last item
+//     await t.context.session.findElement(By.css(toolSelector))
+//       .sendKeys(Key.HOME);
 
-    // Send HOME key to the last item
-    await t.context.session.findElement(By.css(toolSelector))
-      .sendKeys(Key.HOME);
+//     t.true(
+//       await waitAndCheckFocus(t, ex.allToolSelectors[0], index),
+//       'Sending HOME to tool "' + toolSelector + '" should move focus to first tool'
+//     );
+//   }
+// });
 
-    t.true(
-      await waitAndCheckFocus(t, ex.allToolSelectors[0], index),
-      'Sending HOME to tool "' + toolSelector + '" should move focus to first tool'
-    );
-  }
-});
+// ariaTest('key END moves focus', exampleFile, 'toolbar-end', async (t) => {
+//   let numTools = ex.allToolSelectors.length;
 
-ariaTest('key END moves focus', exampleFile, 'toolbar-end', async (t) => {
-  let numTools = ex.allToolSelectors.length;
+//   // Confirm right moves HOME focus to first item
+//   for (let index = 0; index < numTools - 1; index++) {
+//     let toolSelector = ex.allToolSelectors[index];
 
-  // Confirm right moves HOME focus to first item
-  for (let index = 0; index < numTools - 1; index++) {
-    let toolSelector = ex.allToolSelectors[index];
+//     // Click on element to focus
+//     await clickAndWait(t, toolSelector);
 
-    // Click on element to focus
-    await clickAndWait(t, toolSelector);
+//     // Send HOME key to the last item
+//     await t.context.session.findElement(By.css(toolSelector))
+//       .sendKeys(Key.HOME);
 
-    // Send HOME key to the last item
-    await t.context.session.findElement(By.css(toolSelector))
-      .sendKeys(Key.HOME);
-
-    t.true(
-      await waitAndCheckFocus(t, ex.allToolSelectors[0], index),
-      'Sending HOME to tool "' + toolSelector + '" should move focus to first tool'
-    );
-  }
-});
-
-*/
+//     t.true(
+//       await waitAndCheckFocus(t, ex.allToolSelectors[0], index),
+//       'Sending HOME to tool "' + toolSelector + '" should move focus to first tool'
+//     );
+//   }
+// });
 
 //ariaTest('', exampleFile, 'toolbar-toogle-esc', async (t) => {});
 //ariaTest('', exampleFile, 'toolbar-toggle-enter-or-space', async (t) => {});
